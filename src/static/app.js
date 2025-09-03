@@ -21,31 +21,42 @@ document.addEventListener("DOMContentLoaded", () => {
         const spotsLeft = details.max_participants - details.participants.length;
 
         // Participants section
-        let participantsHTML = "";
+        let participantsSection;
         if (details.participants.length > 0) {
-          participantsHTML = `
-            <div class="participants-section">
-              <strong>Participants:</strong>
-              <ul class="participants-list">
-                ${details.participants.map(p => `<li>${p}</li>`).join("")}
-              </ul>
-            </div>
-          `;
+          participantsSection = document.createElement("div");
+          participantsSection.className = "participants-section";
+
+          const strong = document.createElement("strong");
+          strong.textContent = "Participants:";
+          participantsSection.appendChild(strong);
+
+          const ul = document.createElement("ul");
+          ul.className = "participants-list";
+          details.participants.forEach(p => {
+            const li = document.createElement("li");
+            li.textContent = p;
+            ul.appendChild(li);
+          });
+          participantsSection.appendChild(ul);
         } else {
-          participantsHTML = `
-            <div class="participants-section info">
-              <em>No participants yet. Be the first to sign up!</em>
-            </div>
-          `;
+          participantsSection = document.createElement("div");
+          participantsSection.className = "participants-section info";
+          const em = document.createElement("em");
+          em.textContent = "No participants yet. Be the first to sign up!";
+          participantsSection.appendChild(em);
         }
 
         activityCard.innerHTML = `
-          <h4>${name}</h4>
-          <p>${details.description}</p>
-          <p><strong>Schedule:</strong> ${details.schedule}</p>
-          <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-          ${participantsHTML}
-        `;
+          <div>
+            <h4>${name}</h4>
+            <p>${details.description}</p>
+            <p><strong>Schedule:</strong> ${details.schedule}</p>
+            <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
+          </div>
+        `.trim();
+
+        // Append participants section safely
+        activityCard.querySelector("div").appendChild(participantsSection);
 
         activitiesList.appendChild(activityCard);
 
